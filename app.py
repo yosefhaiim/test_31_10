@@ -34,6 +34,7 @@ if __name__ == '__main__':
 
 # for run the application:
 # run in terminal:
-# docker compose up --build
+# docker compose --build
+# docker compose up
 # for shot down:
 # docker compose down

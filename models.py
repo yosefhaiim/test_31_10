@@ -5,12 +5,13 @@ from sqlalchemy.orm import relationship  # ייבוא פונקציה ליציר�
 
 Base = declarative_base()
 
-mission_country_targetType = Table(
+mission_country_targetType_target = Table(
     'mission_country_target',
     Base.metadata,
-    Column('mission_id', Integer,ForeignKey('missions.mission_id')),
-    Column('country_id', Integer,ForeignKey('countries.country_id')),
-    Column('target_type', Integer,ForeignKey('targetTypes.target_type_id')),
+    Column('mission_id', Integer,ForeignKey('Missions.mission_id')),
+    Column('country_id', Integer,ForeignKey('Countries.country_id')),
+    Column('target_type_id', Integer,ForeignKey('TargetTypes.target_type_id')),
+    Column('target_id', Integer,ForeignKey('Targets.target_id')),
 )
 
 
@@ -25,7 +26,7 @@ mission_country_targetType = Table(
 
 
 class MissionModel(Base):
-    __tablename__ = 'missions'
+    __tablename__ = 'Missions'
     mission_id = Column(Integer, primary_key=True)
     mission_date = Column(Date)
     airborne_aircraft = Column(Float)
@@ -37,15 +38,29 @@ class MissionModel(Base):
     aircraft_lost = Column(Float)
 
     countries = relationship('Countries',
-                             secondary=mission_country_targetType,
-                             backref='missions',
+                             secondary=mission_country_targetType_target,
+                             backref='Missions',
                              )
 
     targetTypes = relationship('TargetTypes',
-                               secondary=mission_country_targetType,
-                               backref='missions',
+                               secondary=mission_country_targetType_target,
+                               backref='Missions',
                                )
 
+
+class TargetModel(Base):
+    __tablename__ = 'Targets'
+    target_id = Column(Integer, primary_key=True)
+    mission_id = Column(Integer, ForeignKey('Missions.mission_id'))
+    target_industry = Column(String)
+    city_id = Column(Integer)
+    target_type_id = Column(Integer)
+    target_priority = Column(Integer)
+
+    missions = relationship('MissionModel',
+                            secondary=mission_country_targetType_target,
+                            backref='Targets',
+                            )
 
 
 
@@ -59,24 +74,24 @@ class MissionModel(Base):
     # )
 
 class CountryModel(Base):
-    __tablename__ = 'countries'
+    __tablename__ = 'Countries'
     country_id = Column(Integer, primary_key=True)
     country_name = Column(String)
 
     missions = relationship('MissionModel',
-                            secondary=mission_country_targetType,
-                            backref='countries',
+                            secondary=mission_country_targetType_target,
+                            backref='Countries',
                             )
 
 
 class TargetTypeModel(Base):
-    __tablename__ = 'targetTypes'
+    __tablename__ = 'TargetTypes'
     target_type_id = Column(Integer, primary_key=True)
     target_type_name = Column(String)
 
     missions = relationship('MissionModel',
-                            secondary=mission_country_targetType,
-                            backref='targetTypes',
+                            secondary=mission_country_targetType_target,
+                            backref='TargetTypes',
                             )
 
 
