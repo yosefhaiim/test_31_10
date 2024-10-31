@@ -5,6 +5,13 @@ from sqlalchemy.orm import relationship  # ייבוא פונקציה ליציר�
 
 Base = declarative_base()
 
+mission_country_targetType = Table(
+    'mission_country_target',
+    Base.metadata,
+    Column('mission_id', Integer,ForeignKey('missions.mission_id')),
+    Column('country_id', Integer,ForeignKey('countries.country_id')),
+    Column('target_type', Integer,ForeignKey('targetTypes.target_type_id')),
+)
 
 
 # mission_country_relation = Table(
@@ -13,6 +20,9 @@ Base = declarative_base()
 #     Column('mission_id', Integer, primary_key=True),
 #     Column('country_id', Integer, ForeignKey('countries.id')),
 # )
+
+
+
 
 class MissionModel(Base):
     __tablename__ = 'missions'
@@ -26,6 +36,22 @@ class MissionModel(Base):
     aircraft_damaged = Column(Float)
     aircraft_lost = Column(Float)
 
+    countries = relationship('Countries',
+                             secondary=mission_country_targetType,
+                             backref='missions',
+                             )
+
+    targetTypes = relationship('TargetTypes',
+                               secondary=mission_country_targetType,
+                               backref='missions',
+                               )
+
+
+
+
+
+
+
     # countries = relationship(
     #     "CountryModel",
     #     secondary=mission_country_relation,
@@ -36,5 +62,22 @@ class CountryModel(Base):
     __tablename__ = 'countries'
     country_id = Column(Integer, primary_key=True)
     country_name = Column(String)
+
+    missions = relationship('MissionModel',
+                            secondary=mission_country_targetType,
+                            backref='countries',
+                            )
+
+
+class TargetTypeModel(Base):
+    __tablename__ = 'targetTypes'
+    target_type_id = Column(Integer, primary_key=True)
+    target_type_name = Column(String)
+
+    missions = relationship('MissionModel',
+                            secondary=mission_country_targetType,
+                            backref='targetTypes',
+                            )
+
 
 
