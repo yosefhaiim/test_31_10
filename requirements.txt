@@ -1,0 +1,7 @@
+Flask==2.0.1  # גרסה 2.0.1 של Flask, מסגרת לפיתוח יישומי ווב בפייתון.
+Werkzeug==2.0.3  # גרסה 2.0.3 של Werkzeug, ספריה המספקת פונקציות ברמת השירותים ליישומי Flask.
+Flask-GraphQL==2.0.1  # גרסה 2.0.1 של Flask-GraphQL, הרחבה של Flask המאפשרת להשתמש ב-GraphQL.
+graphene==2.1.8  # גרסה 2.1.8 של Graphene, ספריה לבניית APIs ב-GraphQL.
+graphene-sqlalchemy==2.2.2  # גרסה 2.2.2 של graphene-sqlalchemy, חיבור בין Graphene ל-SQLAlchemy.
+SQLAlchemy==1.4.22  # גרסה 1.4.22 של SQLAlchemy, ספריית ORM (Object Relational Mapping) לפייתון.
+psycopg2-binary==2.9.1  # גרסה 2.9.1 של psycopg2-binary, חיבור לפייתון למסדי נתונים של PostgreSQL.

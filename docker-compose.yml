@@ -1,0 +1,28 @@
+# העתקתי מקובץ אחר
+
+
+version: '3'  # גרסת Docker Compose
+
+services:  # הגדרת שירותים
+  db:  # שירות עבור מסד הנתונים
+    image: postgres:13  # תמונת Docker עבור PostgreSQL
+    environment:  # משתני סביבה
+      POSTGRES_USER: postgresql  # שם המשתמש
+      POSTGRES_PASSWORD: 1234  # סיסמה
+      POSTGRES_DB: users_subjects_db  # שם מסד הנתונים
+    volumes:  # וולומים
+      - db_data:/var/lib/postgresql/data  # מיפוי וולום לנתוני PostgreSQL
+    ports:  # הגדרת פורטים
+      - "5432:5432"  # מיפוי פורט 5432 בקונטיינר לפורט 5432 במחשב
+
+  api:  # שירות עבור האפליקציה
+    build: .  # בניית הקונטיינר מה-Dockerfile במיקום הנוכחי
+    depends_on:  # תלות בשירות db
+      - db
+    ports:  # הגדרת פורטים
+      - "5000:5000"  # מיפוי פורט 5000 בקונטיינר לפורט 5000 במחשב
+    environment:  # משתני סביבה
+      - DATABASE_URL=postgresql://admin:1234@localhost:5437/missions_db  # URI של מסד הנתונים
+
+volumes:  # הגדרת וולומים
+  db_data:  # וולום לאחסון נתוני מסד הנתונים
