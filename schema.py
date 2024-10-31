@@ -1,5 +1,3 @@
-from audioop import maxpp
-
 import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType  # יבוא את SQLAlchemyObjectType המאפשר ליצור סוגים המבוססים על מודלים של SQLAlchemy.
 from sqlalchemy import and_
@@ -46,7 +44,7 @@ class Query(graphene.ObjectType):
         return [mis_id for mis_id in list_of_mission_ids if MissionModel.mission_id == mis_id]
 
 
-# פטור משאילתא 5
+# ויתרו על שאילתא 5
 
 
 # שאילתא 6
@@ -73,6 +71,7 @@ class AddMission(graphene.Mutation):
 
         mission = graphene.Field(lambda: Mission)
 
+        @staticmethod
         def mutate(self, info, mission_id, mission_date,
                    airborne_aircraft, attacking_aircraft,
                    bombing_aircraft, aircraft_returned,
@@ -97,11 +96,11 @@ class UpdateMissions(graphene.Mutation):
         failed_aircraft = graphene.Float()
         damaged_aircraft = graphene.Float()
         lost_aircraft = graphene.Float()
-        damage_assessment = graphene.Float()
 
+        @staticmethod
         def mutate(self, info, mission_id, returned_aircraft,
                    failed_aircraft,damaged_aircraft,
-                   lost_aircraft, damage_assessment):
+                   lost_aircraft):
             mission = db_session.query(MissionModel).get(mission_id)
             if not mission:
                 raise Exception("Mission not found")
@@ -109,15 +108,31 @@ class UpdateMissions(graphene.Mutation):
             mission.failed_aircraft = failed_aircraft
             mission.damaged_aircraft = damaged_aircraft
             mission.lost_aircraft = lost_aircraft
-            mission.damage_assessment = damage_assessment
+
             db_session.commit()
             return UpdateMissions(mission=mission)
+
+
+
+class DeleteMission(graphene.Mutation):
+    class Arguments:
+        mission_id = graphene.Int(required=True)
+
+        @staticmethod
+        def mutate(self, info, mission_id):
+            mission = db_session.query(MissionModel).get(mission_id)
+            if not mission:
+                raise Exception("Mission not found")
+            db_session.delete(mission)
+            db_session.commit()
+            return DeleteMission(mission=mission)
 
 
 
 class Mutation(graphene.ObjectType):
     add_mission = AddMission.Field()
     update_mission = UpdateMissions.Field()
+    delete_mission = DeleteMission.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
