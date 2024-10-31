@@ -1,3 +1,5 @@
+from audioop import maxpp
+
 import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType  # יבוא את SQLAlchemyObjectType המאפשר ליצור סוגים המבוססים על מודלים של SQLAlchemy.
 from sqlalchemy import and_
@@ -30,7 +32,7 @@ class Query(graphene.ObjectType):
         )
 
     # @staticmethod
-    # def resolve_mission_by_country(self, country):
+    # def resolve_mission_by_country(self, country_name):
     #     return db_session.query(MissionModel).filter(
     #
     #     )
@@ -45,8 +47,19 @@ class Query(graphene.ObjectType):
 
 
 
+#################################### Mutation  ################################
 
-
+class AddMissions(graphene.Mutation):
+    class Arguments:
+        mission_id = graphene.Int(required=True, primary_key=True)
+        mission_date = graphene.Date(required=True)
+        airborne_aircraft = graphene.Float()
+        attacking_aircraft = graphene.Float()
+        bombing_aircraft = graphene.Float()
+        aircraft_returned = graphene.Float()
+        aircraft_failed = graphene.Float()
+        aircraft_damaged = graphene.Float()
+        aircraft_lost = graphene.Float()
 
 
 
